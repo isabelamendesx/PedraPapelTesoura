@@ -56,14 +56,16 @@ namespace PedraPapelTesoura
     {
         public static bool GanhaDe(this Forma forma1, Forma forma2)
         {
-            IDictionary<Forma, Forma> ganhaDe = new Dictionary<Forma, Forma>() 
-            { 
-                { Forma.Pedra, Forma.Tesoura },
-                { Forma.Tesoura, Forma.Papel },
-                { Forma.Papel, Forma.Pedra },
+            var ganhaDe = new Dictionary<Forma, HashSet<Forma>>()
+            {
+                [Forma.Pedra] = new HashSet<Forma> { Forma.Tesoura, Forma.Lagarto },
+                [Forma.Tesoura] = new HashSet<Forma> { Forma.Papel, Forma.Lagarto },
+                [Forma.Papel] = new HashSet<Forma> { Forma.Pedra, Forma.Spock },
+                [Forma.Lagarto] = new HashSet<Forma> { Forma.Spock, Forma.Papel },
+                [Forma.Spock] = new HashSet<Forma> { Forma.Tesoura, Forma.Pedra }
             };
 
-            return ganhaDe.TryGetValue(forma1, out var value) ? value == forma2 : false;
+            return ganhaDe.TryGetValue(forma1, out var values) && values.Contains(forma2);
         }
     }
 }

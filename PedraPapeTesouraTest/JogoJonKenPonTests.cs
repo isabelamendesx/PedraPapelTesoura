@@ -1,6 +1,7 @@
 using FluentAssertions;
 using PedraPapelTesoura;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography;
 
 namespace PedraPapeTesouraTest
 {
@@ -22,6 +23,30 @@ namespace PedraPapeTesouraTest
             sut = new JogoService();
         }
 
+        public static IEnumerable<object[]> CasosDeTeste()
+        {
+            yield return new object[] { Forma.Pedra, Forma.Tesoura, Forma.Pedra, "Pedra quebra tesoura" };
+            yield return new object[] { Forma.Tesoura, Forma.Pedra, Forma.Pedra, "Pedra quebra tesoura" };
+            yield return new object[] { Forma.Tesoura, Forma.Papel, Forma.Tesoura, "Tesoura corta papel" };
+            yield return new object[] { Forma.Papel, Forma.Tesoura, Forma.Tesoura, "Tesoura corta papel" };
+            yield return new object[] { Forma.Papel, Forma.Pedra, Forma.Papel, "Papel cobre pedra" };
+            yield return new object[] { Forma.Pedra, Forma.Papel, Forma.Papel, "Papel cobre pedra" };
+            yield return new object[] { Forma.Pedra, Forma.Lagarto, Forma.Pedra, "Pedra esmaga Lagarto" };
+            yield return new object[] { Forma.Lagarto, Forma.Pedra, Forma.Pedra, "Pedra esmaga Lagarto" };
+            yield return new object[] { Forma.Lagarto, Forma.Spock, Forma.Lagarto, "Lagarto envena Spock" };
+            yield return new object[] { Forma.Spock, Forma.Lagarto, Forma.Lagarto, "Lagarto envena Spock" };
+            yield return new object[] { Forma.Spock, Forma.Tesoura, Forma.Spock, "Spock quebra Tesoura" };
+            yield return new object[] { Forma.Tesoura, Forma.Spock, Forma.Spock, "Spock quebra Tesoura" };
+            yield return new object[] { Forma.Tesoura, Forma.Lagarto, Forma.Tesoura, "Tesoura decapita Lagarto" };
+            yield return new object[] { Forma.Lagarto, Forma.Tesoura, Forma.Tesoura, "Tesoura decapita Lagarto" };
+            yield return new object[] { Forma.Lagarto, Forma.Papel, Forma.Lagarto, "Lagarto come Papel" };
+            yield return new object[] { Forma.Papel, Forma.Lagarto, Forma.Lagarto, "Lagarto come Papel" };
+            yield return new object[] { Forma.Papel, Forma.Spock, Forma.Papel, "Papel contesta Spock" };
+            yield return new object[] { Forma.Spock, Forma.Papel, Forma.Papel, "Papel contesta Spock" };
+            yield return new object[] { Forma.Spock, Forma.Pedra, Forma.Spock, "Spock vaporiza Pedra" };
+            yield return new object[] { Forma.Pedra, Forma.Spock, Forma.Spock, "Spock vaporiza Pedra" };
+        }
+
         [Fact]
         public void Jogo_deve_empatar_caso_ambos_os_jogadores_usem_a_mesma_forma()
         {
@@ -37,12 +62,7 @@ namespace PedraPapeTesouraTest
         }
 
         [Theory]
-        [InlineData(Forma.Pedra, Forma.Tesoura, Forma.Pedra, "Pedra quebra tesoura")]
-        [InlineData(Forma.Tesoura, Forma.Pedra, Forma.Pedra, "Pedra quebra tesoura")]
-        [InlineData(Forma.Tesoura, Forma.Papel, Forma.Tesoura, "Tesoura corta papel")]
-        [InlineData(Forma.Papel, Forma.Tesoura, Forma.Tesoura, "Tesoura corta papel")]
-        [InlineData(Forma.Papel, Forma.Pedra, Forma.Papel, "Papel cobre pedra")]
-        [InlineData(Forma.Pedra, Forma.Papel, Forma.Papel, "Papel cobre pedra")]
+        [MemberData(nameof(CasosDeTeste))]
         public void Resultado_jogo_deve_ser_conforme_esperado(Forma forma1, Forma forma2, Forma resultadoEsperado, string requisito)
         {
             // Arrange / Act
